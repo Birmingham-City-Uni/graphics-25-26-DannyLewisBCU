@@ -1,5 +1,18 @@
 #include <iostream>
 #include <lodepng.h>
+#include <vector>
+#include <cstdint>
+
+static inline void setPixel(std::vector<uint8_t>& imageBuffer, int width,int height, int nChanParam, int x, int y,
+	uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+	if (x < 0 || x >= width || y < 0 || y >= height) return;
+	const int nChannels = 4; //RGBA format
+	int pixelIdx = x + y * width;
+	imageBuffer[pixelIdx * nChannels + 0] = r;
+	imageBuffer[pixelIdx * nChannels + 1] = g;
+	imageBuffer[pixelIdx * nChannels + 2] = b;
+	imageBuffer[pixelIdx * nChannels + 3] = a;
+}
 
 
 int main()
@@ -19,10 +32,27 @@ int main()
 	for(int y = 0; y < height; ++y) 
 		for (int x = 0; x < width; ++x) {
 			int pixelIdx = x + y * width;
-			imageBuffer[pixelIdx * nChannels + 0] = 0; // Set red pixel values to 0
-			imageBuffer[pixelIdx * nChannels + 1] = 255; // Set green pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 2] = 255; // Set blue pixel values to 255 (full brightness)
-			imageBuffer[pixelIdx * nChannels + 3] = 255; // Set alpha (transparency) pixel values to 255 (fully opaque)
+
+			if (y < height / 2) {
+				imageBuffer[pixelIdx * nChannels + 0] = 0; // Set red pixel values to 0
+				imageBuffer[pixelIdx * nChannels + 1] = 255; // Set green pixel values to 255 (full brightness)
+				imageBuffer[pixelIdx * nChannels + 2] = 255; // Set blue pixel values to 255 (full brightness)
+				imageBuffer[pixelIdx * nChannels + 3] = 255; // Set alpha (transparency) pixel values to 255 (fully opaque)
+
+			}
+			else {
+				imageBuffer[pixelIdx * nChannels + 0] = 0;
+				imageBuffer[pixelIdx * nChannels + 1] = 255;
+				imageBuffer[pixelIdx * nChannels + 2] = 0;
+				imageBuffer[pixelIdx * nChannels + 3] = 255;
+			}
+		}
+
+	setPixel(imageBuffer, width, height, nChannels, 10, 10, 255, 0, 0, 255);
+
+	for (int y = 50; y < 150; ++y)
+		for (int x = 50; x < 150; ++x) {
+			setPixel(imageBuffer, width, height, nChannels, x, y, 255, 255, 255, 255);
 		}
 
 	/// *** Lab Tasks ***
@@ -48,7 +78,7 @@ int main()
 	//           compression ratio now, and why do you think this is?
 
 
-	// *** Encoding image data ***
+	// *** Encoding image data ***dd
 	// PNG files are compressed to save storage space. 
 	// The lodepng::encode function applies this compression to the image buffer and saves the result 
 	// to the filename given.
