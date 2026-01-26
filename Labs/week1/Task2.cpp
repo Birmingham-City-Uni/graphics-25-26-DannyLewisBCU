@@ -2,6 +2,7 @@
 #include <lodepng.h>
 
 
+
 int main()
 {
 	std::string inputFilename = "../images/stanford_bunny.png";
