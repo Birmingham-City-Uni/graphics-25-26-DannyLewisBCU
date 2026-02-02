@@ -16,7 +16,8 @@ public:
 	// You can use an initialiser list, or set them in the constructor function's body.
 	Vector3()
 	{
-		// YOUR CODE HERE
+
+	
 	}
 
 	// This constructor can be used to set the x, y and z components of a vector when it
