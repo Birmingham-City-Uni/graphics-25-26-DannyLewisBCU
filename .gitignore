@@ -42,3 +42,20 @@
 
 #Cmake
 build/
+
+# Visual Studio Integration
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Build Folders
+x64/
+x86/
+Debug/
+Release/
+
+# CMake specific
+CMakeSettings.json
+CMakeCache.txt
+CMakeFiles/
