@@ -48,6 +48,7 @@ build/
 *.user
 *.userosscache
 *.sln.docstates
+**/*.vsidx
 
 # Visual Studio Build Folders
 x64/
