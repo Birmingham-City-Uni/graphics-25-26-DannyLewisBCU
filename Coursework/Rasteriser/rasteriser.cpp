@@ -44,7 +44,11 @@ int main()
 			float w0 = edgeFunction(v1, v2, p);
 			float w1 = edgeFunction(v2, v0, p);
 			float w2 = edgeFunction(v0, v1, p);
-			if (w0 >= 0 && w1 >= 0 && w2 >= 0) {
+			float area = edgeFunction(v0, v1, v2);
+			if (
+				(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
+				(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
+			) {
 				int pixelIdx = x + y * width;
 				imageBuffer[pixelIdx * nChannels + 0] = 255; 
 				imageBuffer[pixelIdx * nChannels + 1] = 0; 
