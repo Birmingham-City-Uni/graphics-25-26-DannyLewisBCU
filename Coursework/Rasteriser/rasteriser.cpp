@@ -9,10 +9,20 @@ struct Vec2
 	float x, y;
 };
 
-struct Vertex
+struct Vec3
 { 
 	float x, y, z;
 };
+
+Vec2 project(const Vec3& v, int width, int height)
+{
+	float f = 500.0f; // Focal length
+
+	float x = (v.x / v.z) * f + width / 2.0f;
+	float y = (v.y / v.z) * f + height / 2.0f;
+
+	return { x, y };
+}
 
 float edgeFunction(const Vec2& a, const Vec2& b, const Vec2& c)
 {
@@ -30,14 +40,13 @@ int main()
 	std::vector<uint8_t> imageBuffer(height*width*nChannels);
 	std::vector<float> depthBuffer(width * height, std::numeric_limits<float>::infinity());
 
-	Vertex v0 = { 500.0f, 200.0f, 0.2f };
-	Vertex v1 = { 1400.0f, 300.0f, 0.5f };
-	Vertex v2 = { 900.0f, 800.0f, 0.8f };
+	Vec3 v0 = {-1.0f, -1.0f, 2.0f };
+	Vec3 v1 = { 1.0f, -1.0f, 2.0f };
+	Vec3 v2 = { 0.0f, 1.0f, 3.0f };
 
-	Vec2 p0 = { v0.x, v0.y };
-	Vec2 p1 = { v1.x, v1.y };
-	Vec2 p2 = { v2.x, v2.y };
-
+	Vec2 p0 = project(v0, width, height);
+	Vec2 p1 = project(v1, width, height);
+	Vec2 p2 = project(v2, width, height);
  
 
 	// Cyan background
