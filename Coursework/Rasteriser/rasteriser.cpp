@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <lodepng.h>
 
 struct Vec2
@@ -38,13 +39,25 @@ int main()
 			imageBuffer[pixelIdx * nChannels + 3] = 255; 
 		}
 
+	int minX = std::min({ (int)v0.x, (int)v1.x, (int)v2.x });
+	int maxX = std::max({ (int)v0.x, (int)v1.x, (int)v2.x });
+	int minY = std::min({ (int)v0.y, (int)v1.y, (int)v2.y });
+	int maxY = std::max({ (int)v0.y, (int)v1.y, (int)v2.y });
+
+	minX = std::max(minX, 0);
+	maxX = std::min(maxX, width - 1);
+	minY = std::max(minY, 0);
+	maxY = std::min(maxY, height - 1);
+
+	float area = edgeFunction(v0, v1, v2);
+
     for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
-			Vec2 p = { static_cast<float>(x) + 0.5f, static_cast<float>(y) + 0.5f };
+			Vec2 p = {x + 0.5f, y + 0.5f};
 			float w0 = edgeFunction(v1, v2, p);
 			float w1 = edgeFunction(v2, v0, p);
 			float w2 = edgeFunction(v0, v1, p);
-			float area = edgeFunction(v0, v1, v2);
+			
 			if (
 				(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
 				(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
