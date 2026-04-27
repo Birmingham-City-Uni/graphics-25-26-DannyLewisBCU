@@ -1,8 +1,9 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <limits>
 #include <lodepng.h>
+#include <cmath>
 
 struct Vec2
 {
@@ -17,7 +18,27 @@ struct Vec3
 //camera
 Vec3 applyCamera(const Vec3& v, const Vec3& cameraPos)
 {
-	return { v.x - cameraPos.x, v.y - cameraPos.y, v.z - cameraPos.z };
+	Vec3 p = { v.x - cameraPos.x, v.y - cameraPos.y, v.z - cameraPos.z };
+
+	// ✅ ADDED: simple downward tilt (rotate around X axis)
+	float angle = -0.5f; // tilt down
+	float cosA = cos(angle);
+	float sinA = sin(angle);
+
+	float y = p.y * cosA - p.z * sinA;
+	float z = p.y * sinA + p.z * cosA;
+
+	return { p.x, y, z };
+}
+
+
+Vec3 transform(const Vec3& v, Vec3 scale, Vec3 translate)
+{
+	return {
+		v.x * scale.x + translate.x,
+		v.y * scale.y + translate.y,
+		v.z * scale.z + translate.z
+	};
 }
 
 Vec2 project(const Vec3& v, int width, int height)
@@ -46,7 +67,7 @@ int main()
 	std::vector<uint8_t> imageBuffer(height*width*nChannels);
 	std::vector<float> depthBuffer(width * height, std::numeric_limits<float>::infinity());
 
-	Vec3 cameraPos = { 0.0f, 0.0f, -2.0f };
+	Vec3 cameraPos = { 0.0f, 2.5f, -4.0f };
 
 	// Cyan background
     for(int y = 0; y < height; ++y) 
@@ -73,12 +94,19 @@ int main()
 
 	};
 
+	Vec3 floorScale = { 6.0f, 0.5f, 6.0f };
+	Vec3 floorPos = { 0.0f, -1.5f, 2.5f };
+
 	for (auto& tri : triangles) 
 	{
 
-		Vec3 v0 = applyCamera(vertices[tri[0]], cameraPos);
-		Vec3 v1 = applyCamera(vertices[tri[1]], cameraPos);
-		Vec3 v2 = applyCamera(vertices[tri[2]], cameraPos);
+		Vec3 v0 = transform(vertices[tri[0]], floorScale, floorPos); 
+		Vec3 v1 = transform(vertices[tri[1]], floorScale, floorPos);
+		Vec3 v2 = transform(vertices[tri[2]], floorScale, floorPos);
+
+		v0 = applyCamera(v0, cameraPos);
+		v1 = applyCamera(v1, cameraPos);
+		v2 = applyCamera(v2, cameraPos);
 
 		Vec2 p0 = project(v0, width, height);
 		Vec2 p1 = project(v1, width, height);
@@ -114,9 +142,9 @@ int main()
 
 					if (depth < depthBuffer[pixelIdx]) {
 						depthBuffer[pixelIdx] = depth;
-						imageBuffer[pixelIdx * nChannels + 0] = 255; 
-						imageBuffer[pixelIdx * nChannels + 1] = 0;
-						imageBuffer[pixelIdx * nChannels + 2] = 0; 
+						imageBuffer[pixelIdx * nChannels + 0] = 180; 
+						imageBuffer[pixelIdx * nChannels + 1] = 180;
+						imageBuffer[pixelIdx * nChannels + 2] = 180; 
 						imageBuffer[pixelIdx * nChannels + 3] = 255; 
 					}
 				}
