@@ -14,6 +14,12 @@ struct Vec3
 	float x, y, z;
 };
 
+//camera
+Vec3 applyCamera(const Vec3& v, const Vec3& cameraPos)
+{
+	return { v.x - cameraPos.x, v.y - cameraPos.y, v.z - cameraPos.z };
+}
+
 Vec2 project(const Vec3& v, int width, int height)
 {
 	float f = 500.0f; // Focal length
@@ -39,6 +45,8 @@ int main()
 	
 	std::vector<uint8_t> imageBuffer(height*width*nChannels);
 	std::vector<float> depthBuffer(width * height, std::numeric_limits<float>::infinity());
+
+	Vec3 cameraPos = { 0.0f, 0.0f, -2.0f };
 
 	// Cyan background
     for(int y = 0; y < height; ++y) 
@@ -68,9 +76,9 @@ int main()
 	for (auto& tri : triangles) 
 	{
 
-		Vec3 v0 = vertices[tri[0]];
-		Vec3 v1 = vertices[tri[1]];
-		Vec3 v2 = vertices[tri[2]];
+		Vec3 v0 = applyCamera(vertices[tri[0]], cameraPos);
+		Vec3 v1 = applyCamera(vertices[tri[1]], cameraPos);
+		Vec3 v2 = applyCamera(vertices[tri[2]], cameraPos);
 
 		Vec2 p0 = project(v0, width, height);
 		Vec2 p1 = project(v1, width, height);
