@@ -1,16 +1,16 @@
 {
-    "pixWidth": 1920,
-    "pixHeight": 1080,
+    "pixWidth": 800,
+    "pixHeight": 600,
 
-    "maxBounces": 5,
+    "maxBounces": 2,
 
     "clearColor": [0,0,0,255],
 
-    "cameraPos": [0.0, 0.0, -5],
-    "cameraForward": [0.0, 0.0, 1.0],
+    "cameraPos": [0.0, 1.4, -3.0],
+    "cameraForward": [0.0, -0.05, 1.0],
     "cameraUp": [0.0, 1.0, 0.0],
 
-    "cameraFov": 0.785,
+    "cameraFov": 1.2,
 
     "shuffleScanlines": true,
 

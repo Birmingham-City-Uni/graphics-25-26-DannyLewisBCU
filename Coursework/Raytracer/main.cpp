@@ -81,8 +81,8 @@ int main(int argc, char* argv[]) {
 
 	// Optional code: here's how to add the spot mesh to the scene, using a BVH
 	// Try enabling this and comparing it to the non-BVH version below!
-	Model spotModel("../models/spot.obj");
-	scene.renderables.push_back(std::make_shared<BVHNode>(spotModel, &spotShader, 4, rotateY(M_PI / 4.0f)));
+	Model portalRoom("../models/portal_room.obj");
+	scene.renderables.push_back(std::make_shared<BVHNode>(portalRoom, &lavenderLambertianShader, 4, rotateY(0.0f)));
 
 	// Here's how to add the mesh without using the BVH.
 	// Try comparing performance to the BVH version above.
@@ -115,6 +115,7 @@ int main(int argc, char* argv[]) {
 	Ray ray = cam.getRay(531, 325);
 	HitInfo hitInfo;
 	scene.intersect(ray, 1e-6f, 1e6f, hitInfo, VISIBLE_BITMASK);
+	std::cout << "Hit at t = " << hitInfo.hitT << std::endl;
 	float x = hitInfo.hitT;
 
 
