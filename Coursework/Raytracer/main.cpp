@@ -81,8 +81,8 @@ int main(int argc, char* argv[]) {
 
 	// Optional code: here's how to add the spot mesh to the scene, using a BVH
 	// Try enabling this and comparing it to the non-BVH version below!
-	Model portalRoom("../models/portal_room.obj");
-	scene.renderables.push_back(std::make_shared<BVHNode>(portalRoom, &lavenderLambertianShader, 4, rotateY(0.0f)));
+	Model portalRoom("../models/portal.obj");
+	scene.renderables.push_back(std::make_shared<BVHNode>(portalRoom, &lavenderLambertianShader, 4, Eigen::Matrix4f::Identity()));
 
 	// Here's how to add the mesh without using the BVH.
 	// Try comparing performance to the BVH version above.
