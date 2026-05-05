@@ -334,6 +334,205 @@ int main()
 			}
 	}
 
+	Vec3 pillarScale = { 0.35f, 1.4f, 0.35f };
+	Vec3 pillarPos1 = { -2.0f, -1.1f, 5.0f };
+
+	for (auto& tri : triangles)
+	{
+		Vec3 v0 = transform(vertices[tri[0]], pillarScale, pillarPos1);
+		Vec3 v1 = transform(vertices[tri[1]], pillarScale, pillarPos1);
+		Vec3 v2 = transform(vertices[tri[2]], pillarScale, pillarPos1);
+		v0 = applyCamera(v0, cameraPos);
+		v1 = applyCamera(v1, cameraPos);
+		v2 = applyCamera(v2, cameraPos);
+		if (v0.z <= 0 || v1.z <= 0 || v2.z <= 0)
+			continue;
+		Vec2 p0 = project(v0, width, height);
+		Vec2 p1 = project(v1, width, height);
+		Vec2 p2 = project(v2, width, height);
+		int minX = std::max(0, (int)std::min({ p0.x, p1.x, p2.x }));
+		int maxX = std::min(width - 1, (int)std::max({ p0.x, p1.x, p2.x }));
+		int minY = std::max(0, (int)std::min({ p0.y, p1.y, p2.y }));
+		int maxY = std::min(height - 1, (int)std::max({ p0.y, p1.y, p2.y }));
+		float area = edgeFunction(p0, p1, p2);
+		for (int y = minY; y <= maxY; ++y)
+			for (int x = minX; x <= maxX; ++x)
+			{
+				Vec2 p = { x + 0.5f, y + 0.5f };
+				float w0 = edgeFunction(p1, p2, p);
+				float w1 = edgeFunction(p2, p0, p);
+				float w2 = edgeFunction(p0, p1, p);
+				if (
+					(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
+					(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
+					) {
+					w0 /= area;
+					w1 /= area;
+					w2 /= area;
+					float depth = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+					int pixelIdx = x + y * width;
+
+					if (depth < depthBuffer[pixelIdx]) {
+						depthBuffer[pixelIdx] = depth;
+						imageBuffer[pixelIdx * nChannels + 0] = 40;
+						imageBuffer[pixelIdx * nChannels + 1] = 40;
+						imageBuffer[pixelIdx * nChannels + 2] = 60;
+						imageBuffer[pixelIdx * nChannels + 3] = 255;
+					}
+				}
+			}
+	}
+
+
+	Vec3 pillarScale2 = { 0.35f, 1.4f, 0.35f };
+	Vec3 pillarPos2 = { 2.0f, -1.1f, 5.0f };
+
+	for (auto& tri : triangles)
+	{
+		Vec3 v0 = transform(vertices[tri[0]], pillarScale2, pillarPos2);
+		Vec3 v1 = transform(vertices[tri[1]], pillarScale2, pillarPos2);
+		Vec3 v2 = transform(vertices[tri[2]], pillarScale2, pillarPos2);
+		v0 = applyCamera(v0, cameraPos);
+		v1 = applyCamera(v1, cameraPos);
+		v2 = applyCamera(v2, cameraPos);
+		if (v0.z <= 0 || v1.z <= 0 || v2.z <= 0)
+			continue;
+		Vec2 p0 = project(v0, width, height);
+		Vec2 p1 = project(v1, width, height);
+		Vec2 p2 = project(v2, width, height);
+		int minX = std::max(0, (int)std::min({ p0.x, p1.x, p2.x }));
+		int maxX = std::min(width - 1, (int)std::max({ p0.x, p1.x, p2.x }));
+		int minY = std::max(0, (int)std::min({ p0.y, p1.y, p2.y }));
+		int maxY = std::min(height - 1, (int)std::max({ p0.y, p1.y, p2.y }));
+		float area = edgeFunction(p0, p1, p2);
+		for (int y = minY; y <= maxY; ++y)
+			for (int x = minX; x <= maxX; ++x)
+			{
+				Vec2 p = { x + 0.5f, y + 0.5f };
+				float w0 = edgeFunction(p1, p2, p);
+				float w1 = edgeFunction(p2, p0, p);
+				float w2 = edgeFunction(p0, p1, p);
+				if (
+					(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
+					(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
+					) {
+					w0 /= area;
+					w1 /= area;
+					w2 /= area;
+					float depth = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+					int pixelIdx = x + y * width;
+
+					if (depth < depthBuffer[pixelIdx]) {
+						depthBuffer[pixelIdx] = depth;
+						imageBuffer[pixelIdx * nChannels + 0] = 40;
+						imageBuffer[pixelIdx * nChannels + 1] = 40;
+						imageBuffer[pixelIdx * nChannels + 2] = 60;
+						imageBuffer[pixelIdx * nChannels + 3] = 255;
+					}
+				}
+			}
+	}
+
+
+	Vec3 topScale1 = {0.7f, 0.08f, 0.7f};
+	Vec3 topPos1 = { -2.0f, 0.35f, 4.0f };
+
+	for (auto& tri : triangles)
+	{
+		Vec3 v0 = transform(vertices[tri[0]], topScale1, topPos1);
+		Vec3 v1 = transform(vertices[tri[1]], topScale1, topPos1);
+		Vec3 v2 = transform(vertices[tri[2]], topScale1, topPos1);
+		v0 = applyCamera(v0, cameraPos);
+		v1 = applyCamera(v1, cameraPos);
+		v2 = applyCamera(v2, cameraPos);
+		if (v0.z <= 0 || v1.z <= 0 || v2.z <= 0)
+			continue;
+		Vec2 p0 = project(v0, width, height);
+		Vec2 p1 = project(v1, width, height);
+		Vec2 p2 = project(v2, width, height);
+		int minX = std::max(0, (int)std::min({ p0.x, p1.x, p2.x }));
+		int maxX = std::min(width - 1, (int)std::max({ p0.x, p1.x, p2.x }));
+		int minY = std::max(0, (int)std::min({ p0.y, p1.y, p2.y }));
+		int maxY = std::min(height - 1, (int)std::max({ p0.y, p1.y, p2.y }));
+		float area = edgeFunction(p0, p1, p2);
+		for (int y = minY; y <= maxY; ++y)
+			for (int x = minX; x <= maxX; ++x)
+			{
+				Vec2 p = { x + 0.5f, y + 0.5f };
+				float w0 = edgeFunction(p1, p2, p);
+				float w1 = edgeFunction(p2, p0, p);
+				float w2 = edgeFunction(p0, p1, p);
+				if (
+					(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
+					(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
+					) {
+					w0 /= area;
+					w1 /= area;
+					w2 /= area;
+					float depth = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+					int pixelIdx = x + y * width;
+
+					if (depth < depthBuffer[pixelIdx]) {
+						depthBuffer[pixelIdx] = depth;
+						imageBuffer[pixelIdx * nChannels + 0] = 230;
+						imageBuffer[pixelIdx * nChannels + 1] = 230;
+						imageBuffer[pixelIdx * nChannels + 2] = 230;
+						imageBuffer[pixelIdx * nChannels + 3] = 255;
+					}
+				}
+			}
+	}
+
+
+	Vec3 topScale2 = { 0.7f, 0.08f, 0.7f };
+	Vec3 topPos2 = { 2.0f, 0.35f, 4.0f };
+
+	for (auto& tri : triangles)
+	{
+		Vec3 v0 = transform(vertices[tri[0]], topScale2, topPos2);
+		Vec3 v1 = transform(vertices[tri[1]], topScale2, topPos2);
+		Vec3 v2 = transform(vertices[tri[2]], topScale2, topPos2);
+		v0 = applyCamera(v0, cameraPos);
+		v1 = applyCamera(v1, cameraPos);
+		v2 = applyCamera(v2, cameraPos);
+		if (v0.z <= 0 || v1.z <= 0 || v2.z <= 0)
+			continue;
+		Vec2 p0 = project(v0, width, height);
+		Vec2 p1 = project(v1, width, height);
+		Vec2 p2 = project(v2, width, height);
+		int minX = std::max(0, (int)std::min({ p0.x, p1.x, p2.x }));
+		int maxX = std::min(width - 1, (int)std::max({ p0.x, p1.x, p2.x }));
+		int minY = std::max(0, (int)std::min({ p0.y, p1.y, p2.y }));
+		int maxY = std::min(height - 1, (int)std::max({ p0.y, p1.y, p2.y }));
+		float area = edgeFunction(p0, p1, p2);
+		for (int y = minY; y <= maxY; ++y)
+			for (int x = minX; x <= maxX; ++x)
+			{
+				Vec2 p = { x + 0.5f, y + 0.5f };
+				float w0 = edgeFunction(p1, p2, p);
+				float w1 = edgeFunction(p2, p0, p);
+				float w2 = edgeFunction(p0, p1, p);
+				if (
+					(w0 >= 0 && w1 >= 0 && w2 >= 0 && area > 0) ||
+					(w0 <= 0 && w1 <= 0 && w2 <= 0 && area < 0)
+					) {
+					w0 /= area;
+					w1 /= area;
+					w2 /= area;
+					float depth = w0 * v0.z + w1 * v1.z + w2 * v2.z;
+					int pixelIdx = x + y * width;
+
+					if (depth < depthBuffer[pixelIdx]) {
+						depthBuffer[pixelIdx] = depth;
+						imageBuffer[pixelIdx * nChannels + 0] = 230;
+						imageBuffer[pixelIdx * nChannels + 1] = 230;
+						imageBuffer[pixelIdx * nChannels + 2] = 230;
+						imageBuffer[pixelIdx * nChannels + 3] = 255;
+					}
+				}
+			}
+	}
+
 	// Save the image
 	int errorCode;
 	errorCode = lodepng::encode(outputFilename, imageBuffer, width, height);
